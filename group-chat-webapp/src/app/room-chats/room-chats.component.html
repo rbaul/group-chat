@@ -1,0 +1,43 @@
+<div class="mat-elevation-z8">
+  <table mat-table class="full-width-table" matSort aria-label="Elements">
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+    <!-- Id Column -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Description</th>
+      <td mat-cell *matCellDef="let row">{{row.description}}</td>
+    </ng-container>
+
+    <!-- Participants Column -->
+    <ng-container matColumnDef="participants">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Participants</th>
+      <td mat-cell *matCellDef="let row">{{row.participants}}</td>
+    </ng-container>
+
+    <!-- Actions -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Action</th>
+      <td mat-cell *matCellDef="let row">
+        <button mat-button (click)="openChat(row)">
+<!--          <mat-icon matSuffix></mat-icon>-->
+          Open
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openChat(row)"></tr>
+  </table>
+
+  <mat-paginator #paginator
+                 [length]="dataSource.totalElements$ | async"
+                 [pageSize]="pageSize"
+                 [showFirstLastButtons]=true
+                 [pageSizeOptions]="pageSizeOptions">
+  </mat-paginator>
+</div>

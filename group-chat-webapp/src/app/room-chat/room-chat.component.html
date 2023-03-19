@@ -1,0 +1,31 @@
+<div class="mat-typography conversation-header">
+  <h2>
+    <mat-icon>forum</mat-icon>
+    {{selectedConversation.name}} -
+    <mat-icon>account_circle</mat-icon>
+    {{selectedConversation.userName}}
+  </h2>
+
+</div>
+<mat-divider></mat-divider>
+
+<mat-list dense class="conversation-history mat-typography">
+  <mat-list-item *ngFor="let message of messages; index as i"
+                 [dir]="message.userName === selectedConversation.userName ? 'rtl' : 'ltr'">
+    <img *ngIf="message.type == undefined" matListItemAvatar matTooltip="{{message.userName}}"
+         src="https://randomuser.me/api/portraits/thumb/lego/{{i}}.jpg"
+     alt=""/>
+    <p *ngIf="message.type == undefined" [dir]="'ltr'">{{message.message}}</p>
+    <p *ngIf="message.type == 'member:joined'" class="text-center">
+      <b>{{message.userName}}</b> has joined the conversation</p>
+  </mat-list-item>
+</mat-list>
+
+
+<div class="conversation-input">
+  <mat-divider></mat-divider>
+  <mat-form-field class="full-width">
+    <input matInput placeholder="Start chatting..." name="text" [(ngModel)]="text">
+    <mat-icon matSuffix (click)="sendText(text)">send</mat-icon>
+  </mat-form-field>
+</div>
