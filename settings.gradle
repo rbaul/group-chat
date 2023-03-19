@@ -1,0 +1,3 @@
+rootProject.name = 'group-chat'
+include 'group-chat-webapp'
+
