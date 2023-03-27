@@ -18,7 +18,7 @@ import {SocketIoConfig} from "./ngx-socket-io/socket-io.config";
 import {SocketIoModule} from "./ngx-socket-io/socket-io.module";
 import {environment} from "../environments/environment";
 
-const config: SocketIoConfig = { url: `${environment.ws_url}`, options: {transports: ['websocket']} };
+const config: SocketIoConfig = { url: `${environment.ws_url}/chats`, options: {transports: ['websocket']} };
 
 @NgModule({
   declarations: [

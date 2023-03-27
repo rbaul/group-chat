@@ -17,11 +17,11 @@ public class SocketIoUpdaterService implements WebSocketUpdaterService {
 	
 	@Override
 	public void notifyGroupChatMessageChange(long groupChatId, GroupChatMessageNotificationDto notificationDto) {
-		this.socketIOServer.getRoomOperations(String.valueOf(groupChatId)).sendEvent("chat-message-change", notificationDto);
+		this.socketIOServer.getNamespace(ChatSocketController.CHAT_NAMESPACE).getRoomOperations(String.valueOf(groupChatId)).sendEvent("chat-message-change", notificationDto);
 	}
 	
 	@Override
 	public void notifyGroupChatsChange(long groupChatId, GroupChatNotificationDto notificationDto) {
-		this.socketIOServer.getBroadcastOperations().sendEvent("group-chats-change", notificationDto);
+		this.socketIOServer.getNamespace(ChatsSocketController.CHATS_NAMESPACE).getBroadcastOperations().sendEvent("group-chats-change", notificationDto);
 	}
 }

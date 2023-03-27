@@ -16,7 +16,7 @@ export class SocketIoChatService {
   public initSocket(room: string | undefined = undefined, userName: string = ''): void {
     if (room) {
       this.socket = new WrappedSocket({
-        url: `${environment.ws_url}?room=${room}&user=${userName}`, options: {
+        url: `${environment.ws_url}/chat?room=${room}&user=${userName}`, options: {
           transports: ['websocket'],
           // Work only in polling, websocket // WARN: this will be ignored in a browser
           // extraHeaders: {
