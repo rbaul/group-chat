@@ -2,10 +2,5 @@
     "/api": {
       "target": "http://localhost:8080",
       "secure": false
-    },
-    "/group-chat-websocket": {
-      "target": "http://localhost:8080",
-      "secure": false,
-      "ws": true
     }
 }

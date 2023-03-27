@@ -1,4 +1,9 @@
-<div id="particles-js"></div>
+<ng-particles
+  [id]="id"
+  [url]="particlesUrl"
+  [particlesInit]="particlesInit"
+  (particlesLoaded)="particlesLoaded($event)"
+></ng-particles>
 <div class="login-container" fxLayout="row" fxLayoutAlign="center center">
   <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <mat-card>
@@ -16,7 +21,9 @@
         <mat-error *ngIf="errorMessage">{{errorMessage}}</mat-error>
       </mat-card-content>
       <mat-card-actions>
-          <button mat-raised-button class="full-width-input" color="primary" type="submit" [disabled]="!loginForm.valid || loading">Login</button>
+        <button mat-raised-button class="full-width-input" color="primary" type="submit"
+                [disabled]="!loginForm.valid || loading">Login
+        </button>
       </mat-card-actions>
       <!-- <mat-card-footer *ngIf="errorMessage" style="background: #eb4b5b;">{{errorMessage}}</mat-card-footer> -->
     </mat-card>

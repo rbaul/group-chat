@@ -2,8 +2,9 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import { LoginService } from '../shared/login.service';
+import {Container, Engine} from "tsparticles-engine";
+import { loadSlim } from "tsparticles-slim";
 
-declare let particlesJS: any;
 
 @Component({
   selector: 'app-login',
@@ -11,6 +12,9 @@ declare let particlesJS: any;
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit, AfterViewInit {
+
+  id = "tsparticles";
+  particlesUrl = 'assets/particlesjs-config.json';
 
   loginForm: FormGroup;
   loading = false;
@@ -38,9 +42,19 @@ export class LoginComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    particlesJS.load('particles-js', 'assets/particlesjs-config.json', function () {
-      console.log('particles.json loaded...');
-    });
+  }
+
+  particlesLoaded(container: Container): void {
+    console.log(container);
+  }
+
+  async particlesInit(engine: Engine): Promise<void> {
+    console.log(engine);
+
+    // Starting from 1.19.0 you can add custom presets or shape here, using the current tsParticles instance (main)
+    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+    // starting from v2 you can add only the features you need reducing the bundle size
+    await loadSlim(engine);
   }
 
   // convenience getter for easy access to form fields

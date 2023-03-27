@@ -34,8 +34,9 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "sockjs-client/dist/sockjs.js",
-              "particles.js/particles.js"
+            ],
+            "allowedCommonJsDependencies": [
+              "socket.io-client"
             ]
           },
           "configurations": {

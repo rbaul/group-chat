@@ -1,3 +1,9 @@
+buildscript {
+    ext {
+        nettySocketioVersion = '1.7.23'
+    }
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.0.4'
@@ -21,9 +27,11 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.flywaydb:flyway-core'
+
+    // Netty SocketIO
+    implementation 'com.corundumstudio.socketio:netty-socketio:1.7.23'
 
     // OpenApi
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.+'

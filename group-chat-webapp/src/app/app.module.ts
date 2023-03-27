@@ -13,6 +13,12 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { HttpClientModule } from '@angular/common/http';
 import {FlexLayoutModule} from "@angular/flex-layout";
+import {NgParticlesModule} from "ng-particles";
+import {SocketIoConfig} from "./ngx-socket-io/socket-io.config";
+import {SocketIoModule} from "./ngx-socket-io/socket-io.module";
+import {environment} from "../environments/environment";
+
+const config: SocketIoConfig = { url: `${environment.ws_url}`, options: {transports: ['websocket']} };
 
 @NgModule({
   declarations: [
@@ -31,7 +37,9 @@ import {FlexLayoutModule} from "@angular/flex-layout";
     FormsModule,
     HttpClientModule,
     LayoutModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    NgParticlesModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -3,10 +3,8 @@ import {RoomChatsApiService} from "../services/room-chats-api.service";
 import {ActivatedRoute} from "@angular/router";
 import {RoomChatMessageDto, RoomChatMessageNotificationDto} from "../models/room-chat.model";
 import {LoginService} from "../shared/login.service";
-import {CompatClient, IFrame, Stomp} from '@stomp/stompjs';
-import {StompHeaders} from "@stomp/stompjs/src/stomp-headers";
+import {SocketIoChatService} from "../services/socket-io-chat.service";
 
-declare let SockJS: any
 
 @Component({
   selector: 'app-room-chat',
@@ -19,12 +17,12 @@ export class RoomChatComponent implements OnInit, OnDestroy {
   messages: RoomChatMessageDto[] = [];
 
   text: string = '';
-  stompClient: CompatClient | undefined;
 
   constructor(
     private roomChatsApiService: RoomChatsApiService,
     private activatedRoute: ActivatedRoute,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private socket: SocketIoChatService
   ) {
   }
 
@@ -36,26 +34,20 @@ export class RoomChatComponent implements OnInit, OnDestroy {
           this.selectedConversation = result;
           this.selectedConversation.userName = this.loginService.getUser();
           this.selectedConversation.id = roomId;
-          const socket: WebSocket = new SockJS('/group-chat-websocket');
-          this.stompClient = Stomp.over(socket);
-          let headers: StompHeaders = {
-            user: this.selectedConversation.userName,
-            roomId: `${this.selectedConversation.id}`
-          };
 
-          this.stompClient.connect(headers, (frame: IFrame) => {
-            this.stompClient?.subscribe(`/topic/group-chats/${this.selectedConversation.id}/messages-changed`, message => {
-              console.log(`Received: ${message}`)
-              if (message.body) {
-                let notification: RoomChatMessageNotificationDto = JSON.parse(message.body);
-                let items = notification.content;
-                if (items) {
-                  this.messages.push(items);
-                }
-
-              }
-            });
+          this.socket.initSocket(`${roomId}`, this.selectedConversation.userName);
+          this.socket.onEvent('connect').subscribe(value1 => {
+            console.log('Connected');
           });
+
+          this.socket.onEvent<RoomChatMessageNotificationDto>('chat-message-change').subscribe((message) => {
+            console.log(`Received: ${message}`)
+            let items = message.content;
+            if (items) {
+              this.messages.push(items);
+            }
+          });
+
         });
 
       }
@@ -63,8 +55,8 @@ export class RoomChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.stompClient) {
-      this.stompClient.disconnect();
+    if (this.socket) {
+      this.socket.disconnect();
     }
   }
 
@@ -74,9 +66,8 @@ export class RoomChatComponent implements OnInit, OnDestroy {
       message: text,
       userName: this.selectedConversation.userName
     }
-    this.stompClient?.publish({ destination: `/group-chats/${this.selectedConversation.id}/message`, body: JSON.stringify(message) });
+    this.socket?.emit('newMessage', message);
     this.text = '';
-    // this.selectedConversation.sendText(text).then(() => this.text = "")
   }
 
 }

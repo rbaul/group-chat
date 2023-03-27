@@ -7,6 +7,7 @@ import com.github.rbaul.groupchat.domain.repository.GroupChatMessageRepository;
 import com.github.rbaul.groupchat.domain.repository.GroupChatRepository;
 import com.github.rbaul.groupchat.web.dto.GroupChatDto;
 import com.github.rbaul.groupchat.web.dto.GroupChatMessageDto;
+import com.github.rbaul.groupchat.web.dto.GroupChatMessageNotificationDto;
 import com.github.rbaul.groupchat.web.dto.GroupChatNotificationDto;
 import com.github.rbaul.groupchat.web.dto.NotificationTypeDto;
 import com.github.rbaul.groupchat.web.dto.SessionInfoDto;
@@ -101,7 +102,11 @@ public class GroupChatService {
 		GroupChat groupChat = getById(id);
 		GroupChatMessage groupChatMessage = modelMapper.map(groupChatMessageDto, GroupChatMessage.class);
 		groupChat.addHistoryMessage(groupChatMessage);
-		return modelMapper.map(groupChatMessage, GroupChatMessageDto.class);
+		GroupChatMessageDto chatMessageDto = modelMapper.map(groupChatMessage, GroupChatMessageDto.class);
+		webSocketUpdaterService.notifyGroupChatMessageChange(id, GroupChatMessageNotificationDto.builder()
+				.notificationType(NotificationTypeDto.CREATE)
+				.content(groupChatMessageDto).build());
+		return chatMessageDto;
 	}
 	
 	public void addSession(Long roomId, SessionInfoDto sessionInfoDto) {
