@@ -34,10 +34,15 @@ public class ChatSocketController {
 	
 	private DataListener<GroupChatMessageDto> onChatReceived() {
 		return (client, data, ackSender) -> {
-			log.debug("Client[{}] - Received chat message '{}'", client.getSessionId().toString(), data);
+			String sessionId = client.getSessionId().toString();
+			log.debug("Client[{}] - Received chat message '{}'", sessionId, data);
 //			namespace.getBroadcastOperations().sendEvent("chat", data);
-			Long id = SessionCache.getRoomIdBySessionId(client.getSessionId().toString());
-			GroupChatMessageDto groupChatMessageDto = groupChatService.addNewMessage(id, data);
+			Long id = SessionCache.getRoomIdBySessionId(sessionId);
+			if (id == null) {
+				log.error("Not found room ID, on session: " + sessionId);
+			} else {
+				GroupChatMessageDto groupChatMessageDto = groupChatService.addNewMessage(id, data);
+			}
 		};
 	}
 	

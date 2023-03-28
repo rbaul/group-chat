@@ -38,7 +38,7 @@ export class SocketIoChatService {
 
   public emit<T>(event: string, message: T): void {
     if (this.socket) {
-      this.socket?.emit(event, message);
+      this.socket.emit(event, message);
     } else {
       throw new Error('Socket not initialized')
     }

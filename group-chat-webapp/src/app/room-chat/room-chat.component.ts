@@ -48,6 +48,16 @@ export class RoomChatComponent implements OnInit, OnDestroy {
             }
           });
 
+          // Disconnect
+          this.socket.onEvent('disconnect').subscribe(() => {
+            console.log('The client has disconnected!')
+          });
+
+          // Reconnect attempts
+          this.socket.onEvent('reconnect_attempt').subscribe(attempts => {
+            console.log(`Try to reconnect at ${attempts} attempt(s).`)
+          });
+
         });
 
       }

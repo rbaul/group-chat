@@ -40,13 +40,8 @@ export class RoomChatsComponent extends UnsubscribeOnDestroyAdapter implements O
   }
 
   ngOnInit() {
-    // this.socket.initSocket();
 
-    this.socket.fromEvent('connect').subscribe(value1 => {
-      console.log('Connected');
-    });
-
-    this.socket.fromEvent<GroupChatNotificationDto>('group-chats-change').subscribe((message) => {
+    this.subscriptions.push(this.socket.fromEvent<GroupChatNotificationDto>('group-chats-change').subscribe((message) => {
       console.log(`Received: ${message}`)
       let items = message.content;
       if (items) {
@@ -58,7 +53,17 @@ export class RoomChatsComponent extends UnsubscribeOnDestroyAdapter implements O
           find.participants = items.participants;
         }
       }
-    });
+    }));
+
+    // Disconnect
+    this.subscriptions.push(this.socket.fromEvent('disconnect').subscribe(() => {
+      console.log('The client has disconnected!')
+    }));
+
+    // Reconnect attempts
+    this.subscriptions.push(this.socket.fromEvent('reconnect_attempt').subscribe(attempts => {
+      console.log(`Try to reconnect at ${attempts} attempt(s).`)
+    }));
   }
 
   override ngOnDestroy() {
@@ -79,7 +84,4 @@ export class RoomChatsComponent extends UnsubscribeOnDestroyAdapter implements O
     this.router.navigate([`/room-chat/${room.id}`]);
   }
 
-  // onPaginateChange(event: PageEvent) {
-  //   this.dataSource.loadContent(this.paginator.pageSize, this.paginator.pageIndex)
-  // }
 }
